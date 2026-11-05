@@ -420,3 +420,11 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 /* church logo badge (owner 2026-11-05) */
 .brand .logo { width:34px; height:34px; border-radius:50%; background:#fff; padding:2px; flex:none; box-shadow:0 0 0 2px rgba(240,162,76,.55); }
 
+
+/* prayer goal numbers */
+.goals { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin:0 0 20px; }
+.goals > div { text-align:center; padding:20px 10px; border:1px solid var(--night-line); border-radius:22px 22px 8px 8px; background:linear-gradient(160deg, rgba(240,162,76,.2), rgba(240,162,76,.04)); }
+.goals b { display:block; font-family:var(--serif); font-weight:900; font-size:clamp(2.4rem, 8vw, 4rem); line-height:1; color:var(--lamp); }
+.goals small { display:block; margin-top:8px; font-size:14px; color:var(--night-ink); }
+@media (max-width:420px) { .goals small { font-size:12px; } }
+
