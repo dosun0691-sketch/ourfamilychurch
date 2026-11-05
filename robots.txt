@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dosun0691-sketch.github.io/ourfamilychurch/sitemap.xml
