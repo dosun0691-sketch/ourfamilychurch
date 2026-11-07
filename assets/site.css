@@ -365,7 +365,8 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 .leaders { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; justify-content:center; gap:20px 14px; --fs:80px; }
 .leaders li { width:calc(var(--fs) + 12px); text-align:center; }
 .leaders .nm { font-family:var(--serif); font-weight:900; font-size:16px; }
-@media (min-width:760px) { .zz { --fs:96px; } .leaders { --fs:118px; gap:26px 28px; max-width:calc(5 * (var(--fs) + 12px) + 4 * 28px); margin:0 auto; } .leaders .nm { font-size:18px; } }
+#cell .zz { --fs:126px; grid-template-columns:repeat(2, minmax(0,1fr)); } /* 셀모임 조장 사진 1.5배 — 목사님 지시 2026-11-07 */
+@media (min-width:760px) { .zz { --fs:96px; } #cell .zz { --fs:144px; } .leaders { --fs:118px; gap:26px 28px; max-width:calc(5 * (var(--fs) + 12px) + 4 * 28px); margin:0 auto; } .leaders .nm { font-size:18px; } }
 
 /* faster slideshows (owner 2026-11-05: 3x speed) */
 .show.fast img { transition-duration:.35s; }
