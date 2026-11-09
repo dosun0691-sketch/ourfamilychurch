@@ -429,3 +429,43 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 .goals small { display:block; margin-top:8px; font-size:14px; color:var(--night-ink); }
 @media (max-width:420px) { .goals small { font-size:12px; } }
 
+
+/* ── bulletin archive (generated section #bulletins) ── */
+.bl { display:grid; gap:10px; }
+.bl details > summary { list-style:none; cursor:pointer; display:flex; align-items:baseline; gap:10px; }
+.bl details > summary::-webkit-details-marker { display:none; }
+.bl details > summary::before { content:"▸"; color:var(--lamp-text); flex:none; transition:transform .2s; }
+.bl details[open] > summary::before { transform:rotate(90deg); }
+.bl summary small { color:var(--ink-soft); font-size:13px; }
+.bl summary:focus-visible { outline:2px solid var(--lamp); outline-offset:3px; border-radius:6px; }
+.bl-year { background:var(--card); border:1px solid var(--line); border-radius:22px 22px 8px 8px; padding:14px 18px; box-shadow:var(--shadow); }
+.bl-year > summary b { font-family:var(--serif); font-weight:900; font-size:22px; }
+.bl-year[open] > summary { margin-bottom:6px; }
+.bl-month { border-top:1px solid var(--line); padding:10px 0 10px 4px; }
+.bl-month > summary { font-weight:700; }
+.bl-month ul { list-style:none; margin:8px 0 2px; padding:0 0 0 18px; display:grid; gap:6px; }
+.bl-month li { display:flex; flex-wrap:wrap; gap:2px 10px; align-items:baseline; min-width:0; overflow-wrap:anywhere; line-height:1.6; }
+.bl-month time { font-variant-numeric:tabular-nums; color:var(--lamp-text); font-weight:700; min-width:3.2em; }
+.bl-kind { font-size:13px; color:var(--ink-soft); background:var(--sky-soft); border-radius:4px; padding:0 6px; }
+.bl-title { font-family:var(--serif); font-weight:700; }
+.bl-scr, .bl-spk { color:var(--ink-soft); font-size:14px; }
+@media (max-width:420px) { .bl-year { padding:12px 14px; } .bl-month ul { padding-left:8px; } }
+.bl-att { color:var(--ink-soft); font-size:13px; }
+.bl-year > summary { flex-wrap:wrap; row-gap:2px; }
+.bl-avg { flex-basis:100%; padding-left:1.4em; }
+.bl-hl { background:var(--lamp-soft); border-radius:14px 14px 6px 6px; padding:12px 16px; margin:4px 0 10px; }
+.bl-hl h3 { font-size:15px; font-weight:700; color:var(--ink); margin:0 0 6px; }
+.bl-hl ul { margin:0; padding-left:1.2em; display:grid; gap:4px; }
+
+/* 주보: 출석 배지·광고 목록 (2026-11-09 목사님 지시 · 신규 설계) */
+.bl-month li.bl-sun { display:block; }
+.bl-row { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; }
+.bl-n { display:inline-flex; align-items:baseline; gap:5px; border-radius:999px; padding:2px 12px 2px 10px; font-size:13px; font-weight:700; line-height:1.5; }
+.bl-n b { font-size:20px; margin:0 2px; font-weight:900; font-variant-numeric:tabular-nums; }
+.bl-n.am { background:var(--lamp-soft); color:var(--ink); }
+.bl-n.am b { color:var(--lamp-text); }
+.bl-n.pm { background:var(--sky-soft); color:var(--ink); }
+.bl-avg { display:flex; flex-wrap:wrap; gap:6px 10px; }
+.bl-avg .bl-n b { font-size:26px; }
+.bl-month ol.bl-ann { list-style:decimal; display:grid; gap:3px; margin:6px 0 4px; padding:0 0 0 1.6em; }
+.bl-month ol.bl-ann li { display:list-item; font-size:14.5px; line-height:1.7; color:var(--ink); }
