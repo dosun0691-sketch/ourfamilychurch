@@ -73,6 +73,13 @@
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
     ui.children[0].addEventListener('click', function () { go(cur - 1); play(); });
     ui.children[1].addEventListener('click', function () { go(cur + 1); play(); });
+    var sx = null, sy = null;
+    box.addEventListener('touchstart', function (e) { var t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (sx === null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) { go(cur + (dx < 0 ? 1 : -1)); play(); }
+    }, { passive: true });
+    box.style.touchAction = 'pan-y';
     go(0); play();
   });
 
