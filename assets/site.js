@@ -79,7 +79,7 @@
       if (sx === null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) { go(cur + (dx < 0 ? 1 : -1)); play(); }
     }, { passive: true });
-    box.style.touchAction = 'pan-y';
+    box.style.touchAction = 'pan-y pinch-zoom';
     go(0); play();
   });
 
