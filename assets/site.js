@@ -83,6 +83,43 @@
     go(0); play();
   });
 
+  /* phones: long stacks become sideways swipe rows (like the side-by-side layout on a computer) */
+  (function () {
+    function wrapRun(parent, sel, extra) {
+      var kids = Array.prototype.filter.call(parent.children, function (c) { return c.matches(sel); });
+      if (kids.length < 2) return;
+      var box = document.createElement('div'); box.className = 'swipe ' + (extra || '');
+      kids[0].parentNode.insertBefore(box, kids[0]);
+      kids.forEach(function (k) { box.appendChild(k); });
+    }
+    var mw = document.querySelector('#ministry .wrap'); if (mw) wrapRun(mw, 'article.min', 'big');
+    var gw = document.querySelector('#gallery .wrap'); if (gw) wrapRun(gw, '.gal', 'big');
+    [['.years', 'mid'], ['#events .events', 'sm'], ['#events .ev-list', 'mid'], ['#videos .videos', 'mid'], ['.week-grid', 'sm']].forEach(function (x) {
+      document.querySelectorAll(x[0]).forEach(function (el) { el.classList.add('swipe', x[1]); });
+    });
+    document.querySelectorAll('.swipe').forEach(function (row) {
+      var n = row.children.length; if (n < 2) return;
+      var hint = document.createElement('div'); hint.className = 'swipe-hint'; hint.setAttribute('aria-hidden', 'true');
+      hint.innerHTML = '<span class="zh">← 左右滑動看更多 →</span><span class="ko">← 옆으로 밀어서 더 보기 →</span>';
+      row.parentNode.insertBefore(hint, row);
+      var dots = document.createElement('div'); dots.className = 'swipe-dots';
+      for (var i = 0; i < n; i++) {
+        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', (i + 1) + ' / ' + n);
+        (function (i) { b.addEventListener('click', function () { row.scrollTo({ left: row.children[i].offsetLeft - row.offsetLeft - parseFloat(getComputedStyle(row).paddingLeft || 0), behavior: 'smooth' }); }); })(i);
+        dots.appendChild(b);
+      }
+      row.parentNode.insertBefore(dots, row.nextSibling);
+      function mark() {
+        var x = row.scrollLeft, best = 0, bd = 1e9;
+        for (var i = 0; i < n; i++) { var d = Math.abs(row.children[i].offsetLeft - row.offsetLeft - x - parseFloat(getComputedStyle(row).paddingLeft || 0)); if (d < bd) { bd = d; best = i; } }
+        if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) best = n - 1;
+        Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle('on', i === best); });
+      }
+      row.addEventListener('scroll', function () { window.requestAnimationFrame(mark); }, { passive: true });
+      mark();
+    });
+  })();
+
   /* scroll reveal */
   var items = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }

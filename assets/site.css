@@ -479,3 +479,25 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 .path li b { display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%; background:var(--lamp); color:#1c1408; font-size:12px; }
 .path li:not(:last-child)::after { content:"→"; margin-left:6px; color:var(--lamp-text); font-weight:900; }
 .path-note { font-size:14px; margin:4px 0 10px !important; }
+
+/* ---- phones: sideways swipe rows (2026-11-14) ---- */
+.swipe.big { display:contents; }
+.swipe-hint, .swipe-dots { display:none; }
+@media (max-width:759px) {
+  .swipe, .swipe.big { display:flex !important; flex-wrap:nowrap; align-items:flex-start; gap:12px; overflow-x:auto; overflow-y:visible;
+    scroll-snap-type:x mandatory; scroll-padding-left:16px; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain;
+    margin-left:-16px; margin-right:-16px; padding:4px 16px 10px; scrollbar-width:none; touch-action:pan-x pan-y pinch-zoom; }
+  .swipe::-webkit-scrollbar { display:none; }
+  .swipe > * { flex:0 0 84%; min-width:0; scroll-snap-align:start; margin-top:0 !important; margin-bottom:0 !important; }
+  .swipe.big > * { flex-basis:88%; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; box-sizing:border-box; }
+  .swipe.mid > * { flex-basis:80%; }
+  .swipe.sm > * { flex-basis:58%; }
+  .swipe .rv, .js .swipe .rv { opacity:1 !important; transform:none !important; }
+  .swipe-hint { display:block; text-align:center; font-size:14px; font-weight:700; color:var(--ink-soft); margin:6px 0 8px; letter-spacing:.5px; }
+  .swipe-hint .ko { display:none; }
+  [data-lang="ko"] .swipe-hint .ko { display:inline; } [data-lang="ko"] .swipe-hint .zh { display:none; }
+  .swipe-dots { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:6px 0 18px; }
+  .swipe-dots button { width:10px; height:10px; padding:0; border-radius:99px; border:0; background:var(--line); cursor:pointer; transition:width .2s, background .2s; }
+  .swipe-dots button.on { width:26px; background:var(--lamp); }
+}
+@media (max-width:759px){ .dark .swipe-hint { color:var(--night-soft); } .dark .swipe-dots button { background:var(--night-line); } .dark .swipe-dots button.on { background:var(--lamp); } .dark .swipe.big > * { background:var(--night-2); border-color:var(--night-line); } }
