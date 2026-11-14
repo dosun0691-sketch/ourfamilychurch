@@ -94,7 +94,9 @@
     }
     var mw = document.querySelector('#ministry .wrap'); if (mw) wrapRun(mw, 'article.min', 'big');
     var gw = document.querySelector('#gallery .wrap'); if (gw) wrapRun(gw, '.gal', 'big');
-    [['.years', 'mid'], ['#events .events', 'sm'], ['#events .ev-list', 'mid'], ['#videos .videos', 'mid'], ['.week-grid', 'sm'], ['#bulletins .bl', 'mid']].forEach(function (x) {
+    var ow = document.querySelector('#outreach .wrap'); if (ow) wrapRun(ow, '.min, .qwrap', 'big');
+    var pw = document.querySelector('#pastor .wrap'); if (pw) wrapRun(pw, '.pastor, .leaders-wrap', 'big');
+    [['.years', 'mid'], ['#events .events', 'sm'], ['#events .ev-list', 'mid'], ['#videos .videos', 'mid'], ['.week-grid', 'sm'], ['#bulletins .bl', 'mid'], ['#vision .visions', 'mid'], ['#prayer .prayers', 'mid']].forEach(function (x) {
       document.querySelectorAll(x[0]).forEach(function (el) { el.classList.add('swipe', x[1]); });
     });
     document.querySelectorAll('.swipe').forEach(function (row) {
