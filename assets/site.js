@@ -194,6 +194,18 @@
     }).catch(function () {});
   })();
 
+  /* after a site update, refresh this phone's saved copies of the other pages once */
+  (function () {
+    var v = ((document.querySelector('script[src*="site.js?v="]') || {}).src || '').split('v=')[1];
+    if (!v || !window.fetch) return;
+    try { if (localStorage.getItem('church-ver') === v) return; } catch (e) { return; }
+    var pages = ['index', 'pastor', 'worship', 'prayermeet', 'vision', 'ministry', 'outreach', 'events', 'gallery', 'videos', 'prayer', 'visit'];
+    setTimeout(function () {
+      Promise.all(pages.map(function (n) { return fetch(n + '.html', { cache: 'reload' }).catch(function () {}); }))
+        .then(function () { try { localStorage.setItem('church-ver', v); } catch (e) {} });
+    }, 1500);
+  })();
+
   /* scroll reveal */
   var items = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }
