@@ -104,16 +104,21 @@
       row.parentNode.insertBefore(hint, row);
       var dots = document.createElement('div'); dots.className = 'swipe-dots';
       for (var i = 0; i < n; i++) {
-        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', (i + 1) + ' / ' + n);
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'dot'; b.setAttribute('aria-label', (i + 1) + ' / ' + n);
         (function (i) { b.addEventListener('click', function () { row.scrollTo({ left: row.children[i].offsetLeft - row.offsetLeft - parseFloat(getComputedStyle(row).paddingLeft || 0), behavior: 'smooth' }); }); })(i);
         dots.appendChild(b);
       }
+      var prev = document.createElement('button'); prev.type = 'button'; prev.className = 'swipe-arrow'; prev.textContent = '‹'; prev.setAttribute('aria-label', 'previous');
+      var next = document.createElement('button'); next.type = 'button'; next.className = 'swipe-arrow'; next.textContent = '›'; next.setAttribute('aria-label', 'next');
+      function step(d) { var ds = dots.querySelectorAll('.dot'); var cur = Array.prototype.findIndex.call(ds, function (x) { return x.classList.contains('on'); }); ds[Math.max(0, Math.min(n - 1, cur + d))].click(); }
+      prev.addEventListener('click', function () { step(-1); }); next.addEventListener('click', function () { step(1); });
+      dots.insertBefore(prev, dots.firstChild); dots.appendChild(next);
       row.parentNode.insertBefore(dots, row.nextSibling);
       function mark() {
         var x = row.scrollLeft, best = 0, bd = 1e9;
         for (var i = 0; i < n; i++) { var d = Math.abs(row.children[i].offsetLeft - row.offsetLeft - x - parseFloat(getComputedStyle(row).paddingLeft || 0)); if (d < bd) { bd = d; best = i; } }
         if (row.scrollLeft + row.clientWidth >= row.scrollWidth - 4) best = n - 1;
-        Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle('on', i === best); });
+        Array.prototype.forEach.call(dots.querySelectorAll('.dot'), function (b, i) { b.classList.toggle('on', i === best); });
       }
       row.addEventListener('scroll', function () { window.requestAnimationFrame(mark); }, { passive: true });
       mark();

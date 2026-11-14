@@ -497,7 +497,14 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
   .swipe-hint .ko { display:none; }
   [data-lang="ko"] .swipe-hint .ko { display:inline; } [data-lang="ko"] .swipe-hint .zh { display:none; }
   .swipe-dots { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:6px 0 18px; }
-  .swipe-dots button { width:10px; height:10px; padding:0; border-radius:99px; border:0; background:var(--line); cursor:pointer; transition:width .2s, background .2s; }
-  .swipe-dots button.on { width:26px; background:var(--lamp); }
+  .swipe-dots button.dot { width:10px; height:10px; padding:0; border-radius:99px; border:0; background:var(--line); cursor:pointer; transition:width .2s, background .2s; }
+  .swipe-dots button.dot.on { width:26px; background:var(--lamp); }
 }
-@media (max-width:759px){ .dark .swipe-hint { color:var(--night-soft); } .dark .swipe-dots button { background:var(--night-line); } .dark .swipe-dots button.on { background:var(--lamp); } .dark .swipe.big > * { background:var(--night-2); border-color:var(--night-line); } }
+@media (max-width:759px){ .dark .swipe-hint { color:var(--night-soft); } .dark .swipe-dots button { background:var(--night-line); } .dark .swipe-dots button.dot.on { background:var(--lamp); } .dark .swipe.big > * { background:var(--night-2); border-color:var(--night-line); } }
+
+@media (max-width:759px) {
+  .swipe-dots { align-items:center; gap:10px; }
+  .swipe-dots .swipe-arrow { width:44px; height:44px; border-radius:50%; border:2px solid var(--lamp); background:var(--card); color:var(--lamp-text); font-size:28px; line-height:1; font-weight:700; cursor:pointer; margin:0 6px; }
+  .dark .swipe-dots .swipe-arrow { background:var(--night-2); color:var(--lamp); }
+  .dark .swipe-dots button.dot { background:var(--night-line); } .dark .swipe-dots button.dot.on { background:var(--lamp); }
+}
