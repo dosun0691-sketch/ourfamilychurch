@@ -142,16 +142,26 @@
       toast.textContent = (d > 0 ? '→ ' : '← ') + (i + 1) + ' / ' + secs.length + '  ' + name(sec);
       toast.classList.add('on'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('on'); }, 1400);
     }
-    var sx = null, sy = null, st = 0;
+    var sx = null, sy = null, lx = 0, ly = 0, st = 0;
     document.addEventListener('touchstart', function (e) {
-      if (e.touches.length !== 1 || e.target.closest('.swipe, .show, video, iframe, input, textarea, select, .mmenu-panel, .yrs, .qchart')) { sx = null; return; }
-      sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
+      if (e.touches.length !== 1 || e.target.closest('.swipe, .show, video, iframe, input, textarea, select, .mmenu-panel, .yrs, .qchart, .sec-nav')) { sx = null; return; }
+      sx = lx = e.touches[0].clientX; sy = ly = e.touches[0].clientY; st = Date.now();
     }, { passive: true });
-    document.addEventListener('touchend', function (e) {
-      if (sx === null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
-      if (Date.now() - st > 800 || (window.visualViewport && window.visualViewport.scale > 1.05)) return;
-      if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) go(dx < 0 ? 1 : -1);
-    }, { passive: true });
+    document.addEventListener('touchmove', function (e) { if (sx !== null && e.touches.length === 1) { lx = e.touches[0].clientX; ly = e.touches[0].clientY; } else sx = null; }, { passive: true });
+    function finish(e) {
+      if (sx === null) return; var t = e.changedTouches && e.changedTouches[0];
+      var ex = t ? t.clientX : lx, ey = t ? t.clientY : ly; if (e.type === 'touchcancel') { ex = lx; ey = ly; }
+      var dx = ex - sx, dy = ey - sy; sx = null;
+      if (Date.now() - st > 900 || (window.visualViewport && window.visualViewport.scale > 1.05)) return;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+    }
+    document.addEventListener('touchend', finish, { passive: true });
+    document.addEventListener('touchcancel', finish, { passive: true });
+    /* always-visible buttons too (work even if the phone's browser keeps the sideways gesture for itself) */
+    var nav = document.createElement('div'); nav.className = 'sec-nav';
+    nav.innerHTML = '<button type="button" aria-label="previous section">‹</button><button type="button" aria-label="next section">›</button>';
+    nav.children[0].addEventListener('click', function () { go(-1); }); nav.children[1].addEventListener('click', function () { go(1); });
+    document.body.appendChild(nav);
   })();
 
   /* scroll reveal */
