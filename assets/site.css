@@ -523,3 +523,10 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 @media (max-width:759px){ #bulletins .swipe.mid > * { flex-basis:88%; } #bulletins .bl-year:not([open]) { min-height:0; } }
 @media (max-width:759px){ .swipe.big > .pastor { display:block; } .swipe.big > .pastor > * + * { margin-top:14px; } }
 @media (max-width:759px){ .swipe-dots { flex-wrap:nowrap; gap:6px; } .swipe-dots button.dot { width:8px; height:8px; flex:none; } .swipe-dots button.dot.on { width:20px; } .swipe-dots .swipe-arrow { flex:none; } }
+
+.zoom-nav { display:none; }
+@media (max-width:759px) {
+  .zoom-nav { display:flex; align-items:center; gap:4px; position:fixed; left:12px; bottom:84px; z-index:55; background:rgba(20,26,46,.88); border-radius:99px; padding:5px; box-shadow:0 4px 14px rgba(0,0,0,.35); }
+  .zoom-nav button { min-width:48px; height:42px; border-radius:99px; border:0; background:var(--lamp); color:#fff; font-size:17px; font-weight:900; cursor:pointer; padding:0 8px; }
+  .zoom-nav span { color:#fff; font-size:13px; font-weight:700; min-width:40px; text-align:center; }
+}

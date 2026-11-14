@@ -137,10 +137,10 @@
     function name(sec) { var h = sec.querySelector('h1, h2'); if (!h) return ''; var c = h.cloneNode(true);
       c.querySelectorAll(root.getAttribute('data-lang') === 'ko' ? '.zh' : '.ko').forEach(function (x) { x.remove(); });
       return c.textContent.replace(/\s+/g, ' ').trim().slice(0, 24); }
-    function curIndex() { var y = window.scrollY + 120, k = 0; secs.forEach(function (s, i) { if (s.offsetTop <= y) k = i; }); return k; }
+    function curIndex() { var y = window.scrollY + 120, k = 0; secs.forEach(function (s, i) { if (s.getBoundingClientRect().top + window.scrollY <= y) k = i; }); return k; }
     function go(d) {
       var i = Math.max(0, Math.min(secs.length - 1, curIndex() + d)), sec = secs[i];
-      window.scrollTo({ top: sec.offsetTop - 64, behavior: 'smooth' });
+      window.scrollTo({ top: sec.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' });
       toast.textContent = (d > 0 ? '→ ' : '← ') + (i + 1) + ' / ' + secs.length + '  ' + name(sec);
       toast.classList.add('on'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('on'); }, 1400);
     }
@@ -164,6 +164,19 @@
     nav.innerHTML = '<button type="button" aria-label="previous section">‹</button><button type="button" aria-label="next section">›</button>';
     nav.children[0].addEventListener('click', function () { go(-1); }); nav.children[1].addEventListener('click', function () { go(1); });
     document.body.appendChild(nav);
+    /* 가− / 가+ : make the whole page smaller or bigger (saved on this phone) */
+    var Z = [0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3], zi = 4;
+    try { var zs = parseFloat(localStorage.getItem('church-zoom')); if (Z.indexOf(zs) >= 0) zi = Z.indexOf(zs); } catch (e) {}
+    var zbox = document.createElement('div'); zbox.className = 'zoom-nav';
+    zbox.innerHTML = '<button type="button" aria-label="smaller">가−</button><span></span><button type="button" aria-label="bigger">가+</button>';
+    function applyZ() {
+      document.querySelectorAll('body > header, body > main, body > footer').forEach(function (el) { el.style.zoom = Z[zi] === 1 ? '' : String(Z[zi]); });
+      zbox.children[1].textContent = Math.round(Z[zi] * 100) + '%';
+      try { localStorage.setItem('church-zoom', String(Z[zi])); } catch (e) {}
+    }
+    zbox.children[0].addEventListener('click', function () { var y = window.scrollY / document.documentElement.scrollHeight; if (zi > 0) { zi--; applyZ(); window.scrollTo(0, y * document.documentElement.scrollHeight); } });
+    zbox.children[2].addEventListener('click', function () { var y = window.scrollY / document.documentElement.scrollHeight; if (zi < Z.length - 1) { zi++; applyZ(); window.scrollTo(0, y * document.documentElement.scrollHeight); } });
+    document.body.appendChild(zbox); applyZ();
   })();
 
   /* scroll reveal */
