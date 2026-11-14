@@ -526,7 +526,9 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 
 .zoom-nav { display:none; }
 @media (max-width:759px) {
-  .zoom-nav { display:flex; align-items:center; gap:4px; position:fixed; left:12px; bottom:84px; z-index:55; background:rgba(20,26,46,.88); border-radius:99px; padding:5px; box-shadow:0 4px 14px rgba(0,0,0,.35); }
-  .zoom-nav button { min-width:48px; height:42px; border-radius:99px; border:0; background:var(--lamp); color:#fff; font-size:17px; font-weight:900; cursor:pointer; padding:0 8px; }
-  .zoom-nav span { color:#fff; font-size:13px; font-weight:700; min-width:40px; text-align:center; }
+  .zoom-nav { display:flex; align-items:center; border:1px solid rgba(255,255,255,.28); border-radius:999px; height:34px; overflow:hidden; flex:none; }
+  .zoom-nav button { height:34px; min-width:38px; border:0; background:transparent; color:inherit; font-size:14px; font-weight:900; cursor:pointer; padding:0 8px; }
+  .zoom-nav button + button { border-left:1px solid rgba(255,255,255,.28); }
+  .zoom-nav button:active { background:var(--lamp); color:#fff; }
 }
+@media (max-width:420px) { #themeBtn { display:none; } .bar .wrap { gap:6px; } }

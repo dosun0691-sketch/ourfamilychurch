@@ -168,15 +168,17 @@
     var Z = [0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3], zi = 4;
     try { var zs = parseFloat(localStorage.getItem('church-zoom')); if (Z.indexOf(zs) >= 0) zi = Z.indexOf(zs); } catch (e) {}
     var zbox = document.createElement('div'); zbox.className = 'zoom-nav';
-    zbox.innerHTML = '<button type="button" aria-label="smaller">가−</button><span></span><button type="button" aria-label="bigger">가+</button>';
+    zbox.innerHTML = '<button type="button" aria-label="smaller">가−</button><span hidden></span><button type="button" aria-label="bigger">가+</button>';
     function applyZ() {
-      document.querySelectorAll('body > header, body > main, body > footer').forEach(function (el) { el.style.zoom = Z[zi] === 1 ? '' : String(Z[zi]); });
+      document.querySelectorAll('body > main, body > footer').forEach(function (el) { el.style.zoom = Z[zi] === 1 ? '' : String(Z[zi]); });
       zbox.children[1].textContent = Math.round(Z[zi] * 100) + '%';
       try { localStorage.setItem('church-zoom', String(Z[zi])); } catch (e) {}
     }
     zbox.children[0].addEventListener('click', function () { var y = window.scrollY / document.documentElement.scrollHeight; if (zi > 0) { zi--; applyZ(); window.scrollTo(0, y * document.documentElement.scrollHeight); } });
     zbox.children[2].addEventListener('click', function () { var y = window.scrollY / document.documentElement.scrollHeight; if (zi < Z.length - 1) { zi++; applyZ(); window.scrollTo(0, y * document.documentElement.scrollHeight); } });
-    document.body.appendChild(zbox); applyZ();
+    var lang = document.querySelector('.bar .lang'); lang.parentNode.insertBefore(zbox, lang.nextSibling); applyZ();
+    function flash() { toast.textContent = Math.round(Z[zi] * 100) + '%'; toast.classList.add('on'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('on'); }, 900); }
+    zbox.children[0].addEventListener('click', flash); zbox.children[2].addEventListener('click', flash);
   })();
 
   /* scroll reveal */
