@@ -596,3 +596,21 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
   .tile .t-tx b { font-size:14px; line-height:1.25; word-break:keep-all; }
   .tile .t-tx small, .tile .t-go { display:none; }
 }
+/* tiles v3: no box — big bright round icon + label (owner 2026-11-15) */
+.tile { background:none !important; box-shadow:none !important; border:0 !important; color:var(--ink) !important; padding:6px 2px !important; min-height:0 !important; gap:8px !important; }
+.tile::after, .tile .t-go { display:none !important; }
+.tile .t-ic { width:92px; height:92px; border-radius:50%; background:linear-gradient(145deg, var(--c1), var(--c2)) !important; color:#fff !important;
+  box-shadow:0 6px 16px color-mix(in srgb, var(--c1) 45%, transparent), inset 0 -4px 0 rgba(0,0,0,.12) !important; border:3px solid #fff; }
+.tile .t-ic svg { width:52px; height:52px; stroke-width:2.6; filter:drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.tile .t-tx b { color:var(--ink) !important; text-shadow:none !important; font-size:20px; }
+.tile .t-tx small { color:var(--ink-soft) !important; }
+.tile:hover .t-ic, .tile:focus-visible .t-ic { transform:scale(1.06); }
+.tile .t-ic { transition:transform .15s; }
+@media (max-width:759px) {
+  .tiles { gap:14px 6px !important; }
+  .tile .t-ic { width:70px; height:70px; border-width:2px; }
+  .tile .t-ic svg { width:40px; height:40px; }
+  .tile .t-tx b { font-size:14px; font-weight:900; }
+}
+.tile { overflow:visible !important; }
+.tile { justify-content:flex-start !important; }
