@@ -131,7 +131,8 @@
   (function () {
     if (!window.matchMedia || !window.matchMedia('(max-width:759px)').matches) return;
     var secs = Array.prototype.slice.call(document.querySelectorAll('main > section'));
-    if (secs.length < 2) return;
+    var bd = document.body.dataset, paged = !!bd.page;
+    if (!paged && secs.length < 2) return;
     var toast = document.createElement('div'); toast.className = 'sec-toast'; document.body.appendChild(toast);
     var tt = null;
     function name(sec) { var h = sec.querySelector('h1, h2'); if (!h) return ''; var c = h.cloneNode(true);
@@ -139,6 +140,7 @@
       return c.textContent.replace(/\s+/g, ' ').trim().slice(0, 24); }
     function curIndex() { var y = window.scrollY + 120, k = 0; secs.forEach(function (s, i) { if (s.getBoundingClientRect().top + window.scrollY <= y) k = i; }); return k; }
     function go(d) {
+      if (paged) { var u = d > 0 ? bd.next : bd.prev; if (u) { toast.textContent = d > 0 ? '→' : '←'; toast.classList.add('on'); location.href = u; } return; }
       var i = Math.max(0, Math.min(secs.length - 1, curIndex() + d)), sec = secs[i];
       window.scrollTo({ top: sec.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' });
       toast.textContent = (d > 0 ? '→ ' : '← ') + (i + 1) + ' / ' + secs.length + '  ' + name(sec);
