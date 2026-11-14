@@ -94,7 +94,7 @@
     }
     var mw = document.querySelector('#ministry .wrap'); if (mw) wrapRun(mw, 'article.min', 'big');
     var gw = document.querySelector('#gallery .wrap'); if (gw) wrapRun(gw, '.gal', 'big');
-    [['.years', 'mid'], ['#events .events', 'sm'], ['#events .ev-list', 'mid'], ['#videos .videos', 'mid'], ['.week-grid', 'sm']].forEach(function (x) {
+    [['.years', 'mid'], ['#events .events', 'sm'], ['#events .ev-list', 'mid'], ['#videos .videos', 'mid'], ['.week-grid', 'sm'], ['#bulletins .bl', 'mid']].forEach(function (x) {
       document.querySelectorAll(x[0]).forEach(function (el) { el.classList.add('swipe', x[1]); });
     });
     document.querySelectorAll('.swipe').forEach(function (row) {
