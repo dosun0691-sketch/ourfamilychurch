@@ -168,7 +168,7 @@
     var Z = [0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3], zi = 4;
     try { var zs = parseFloat(localStorage.getItem('church-zoom')); if (Z.indexOf(zs) >= 0) zi = Z.indexOf(zs); } catch (e) {}
     var zbox = document.createElement('div'); zbox.className = 'zoom-nav';
-    zbox.innerHTML = '<button type="button" aria-label="smaller">가−</button><span hidden></span><button type="button" aria-label="bigger">가+</button>';
+    zbox.innerHTML = '<button type="button" aria-label="smaller"><span class="zh">A−</span><span class="ko">가−</span></button><span hidden></span><button type="button" aria-label="bigger"><span class="zh">A+</span><span class="ko">가+</span></button>';
     function applyZ() {
       document.querySelectorAll('body > main, body > footer').forEach(function (el) { el.style.zoom = Z[zi] === 1 ? '' : String(Z[zi]); });
       zbox.children[1].textContent = Math.round(Z[zi] * 100) + '%';
