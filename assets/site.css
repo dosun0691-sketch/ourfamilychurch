@@ -585,3 +585,14 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 @media (min-width:1040px) { .nav { gap:2px; } .nav a { padding-left:8px !important; padding-right:8px !important; font-size:14px; white-space:nowrap; } }
 .nav a[aria-current="page"], .mmenu-panel a[aria-current="page"] { color:var(--lamp) !important; font-weight:800; }
 .mmenu-panel { grid-template-columns:repeat(3, minmax(0,1fr)) !important; }
+/* tiles: 4 across × 3 rows everywhere (owner 2026-11-15) */
+.tiles { grid-template-columns:repeat(4, minmax(0,1fr)) !important; }
+@media (max-width:759px) {
+  .tiles { gap:8px !important; }
+  .tile { min-height:0 !important; padding:12px 4px 10px !important; gap:6px !important; border-radius:18px !important; }
+  .tile::after { width:60px; height:60px; right:-20px; top:-20px; }
+  .tile .t-ic { width:46px; height:46px; }
+  .tile .t-ic svg { width:26px; height:26px; }
+  .tile .t-tx b { font-size:14px; line-height:1.25; word-break:keep-all; }
+  .tile .t-tx small, .tile .t-go { display:none; }
+}
