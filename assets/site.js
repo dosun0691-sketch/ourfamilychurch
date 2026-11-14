@@ -183,6 +183,17 @@
     zbox.children[0].addEventListener('click', flash); zbox.children[2].addEventListener('click', flash);
   })();
 
+  /* auto-update: if the page in this phone's cache is older than the site, reload once */
+  (function () {
+    var mine = (document.querySelector('script[src*="site.js?v="]') || {}).src || '';
+    mine = (mine.match(/v=([0-9a-z]+)/) || [])[1]; if (!mine || !window.fetch) return;
+    fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      if (!j || !j.v || j.v === mine) return;
+      var k = 'church-upd-' + j.v; try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) {}
+      var u = location.pathname + '?u=' + j.v + location.hash; location.replace(u);
+    }).catch(function () {});
+  })();
+
   /* scroll reveal */
   var items = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }
