@@ -125,6 +125,35 @@
     });
   })();
 
+  /* phones: swipe sideways anywhere on the page → jump to the next / previous section */
+  (function () {
+    if (!window.matchMedia || !window.matchMedia('(max-width:759px)').matches) return;
+    var secs = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if (secs.length < 2) return;
+    var toast = document.createElement('div'); toast.className = 'sec-toast'; document.body.appendChild(toast);
+    var tt = null;
+    function name(sec) { var h = sec.querySelector('h1, h2'); if (!h) return ''; var c = h.cloneNode(true);
+      c.querySelectorAll(root.getAttribute('data-lang') === 'ko' ? '.zh' : '.ko').forEach(function (x) { x.remove(); });
+      return c.textContent.replace(/\s+/g, ' ').trim().slice(0, 24); }
+    function curIndex() { var y = window.scrollY + 120, k = 0; secs.forEach(function (s, i) { if (s.offsetTop <= y) k = i; }); return k; }
+    function go(d) {
+      var i = Math.max(0, Math.min(secs.length - 1, curIndex() + d)), sec = secs[i];
+      window.scrollTo({ top: sec.offsetTop - 64, behavior: 'smooth' });
+      toast.textContent = (d > 0 ? '→ ' : '← ') + (i + 1) + ' / ' + secs.length + '  ' + name(sec);
+      toast.classList.add('on'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('on'); }, 1400);
+    }
+    var sx = null, sy = null, st = 0;
+    document.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1 || e.target.closest('.swipe, .show, video, iframe, input, textarea, select, .mmenu-panel, .yrs, .qchart')) { sx = null; return; }
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
+    }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (sx === null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
+      if (Date.now() - st > 800 || (window.visualViewport && window.visualViewport.scale > 1.05)) return;
+      if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) go(dx < 0 ? 1 : -1);
+    }, { passive: true });
+  })();
+
   /* scroll reveal */
   var items = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }
