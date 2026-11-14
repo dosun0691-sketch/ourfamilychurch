@@ -69,7 +69,7 @@
     box.appendChild(ui);
     var cnt = ui.querySelector('.cnt'), cur = 0, timer = null;
     function go(n) { imgs[cur].classList.remove('on'); cur = (n + imgs.length) % imgs.length; imgs[cur].classList.add('on'); cnt.textContent = (cur + 1) + ' / ' + imgs.length; }
-    function play() { if (still || imgs.length < 2) return; stop(); timer = setInterval(function () { go(cur + 1); }, +(box.getAttribute('data-ms') || 4000)); }
+    function play() { if (imgs.length < 2) return; stop(); timer = setInterval(function () { go(cur + 1); }, +(box.getAttribute('data-ms') || 4000)); }
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
     ui.children[0].addEventListener('click', function () { go(cur - 1); play(); });
     ui.children[1].addEventListener('click', function () { go(cur + 1); play(); });
