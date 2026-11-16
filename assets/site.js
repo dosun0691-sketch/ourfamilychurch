@@ -148,7 +148,7 @@
     }
     var sx = null, sy = null, lx = 0, ly = 0, st = 0;
     document.addEventListener('touchstart', function (e) {
-      if (e.touches.length !== 1 || e.target.closest('.swipe, .show, video, iframe, input, textarea, select, .mmenu-panel, .yrs, .qchart, .sec-nav')) { sx = null; return; }
+      if (e.touches.length !== 1 || e.target.closest('.jb, .swipe, .show, video, iframe, input, textarea, select, .mmenu-panel, .yrs, .qchart, .sec-nav')) { sx = null; return; }
       sx = lx = e.touches[0].clientX; sy = ly = e.touches[0].clientY; st = Date.now();
     }, { passive: true });
     document.addEventListener('touchmove', function (e) { if (sx !== null && e.touches.length === 1) { lx = e.touches[0].clientX; ly = e.touches[0].clientY; } else sx = null; }, { passive: true });
@@ -213,4 +213,140 @@
     en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } });
   }, { rootMargin: '0px 0px -40px 0px', threshold: 0.01 });
   items.forEach(function (el) { io.observe(el); });
+})();
+
+/* 週報 viewer (#jb): year → Sunday list → one bulletin page at a time, like jubo.jjc.or.kr (owner order 2026-11-16) */
+(function () {
+  var dataEl = document.getElementById('jb-data'), box = document.getElementById('jb');
+  if (!dataEl || !box) return;
+  var D = JSON.parse(dataEl.textContent), root = document.documentElement;
+  var $ = function (id) { return document.getElementById(id); };
+  var ySel = $('jb-year'), q = $('jb-q'), pick = $('jb-pick'), list = $('jb-list'), paper = $('jb-paper'), title = $('jb-title'), dots = $('jb-dots');
+  var years = Object.keys(D.years).sort().reverse();
+  var ko = function () { return root.getAttribute('data-lang') === 'ko'; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var bi = function (z, k) { return '<span class="zh">' + z + '</span><span class="ko">' + k + '</span>'; };
+  var md = function (d) { var p = d.split('-'); return (+p[1]) + '/' + (+p[2]); };
+  var reEsc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+  var idx = 0, zoom = 100, items = [];
+  try { zoom = +localStorage.getItem('jb-zoom') || 100; } catch (e) {}
+
+  function build(y) { items = [{ cover: true, y: y }].concat(D.years[y]); }  // page 1 = year overview, then Sundays newest first
+  function nums(b, avg) {
+    var out = [], a = avg ? bi(' 平均', ' 평균') : '', pr = avg ? b : (b.pr || {});
+    if (b.am != null) out.push('<span class="bl-n am">' + bi('主日出席', '주일출석') + a + ' <b>' + b.am + '</b>' + bi('人', '명') + '</span>');
+    if (b.pm != null) out.push('<span class="bl-n pm">' + bi('下午活動', '오후활동') + a + ' <b>' + b.pm + '</b>' + bi('人', '명') + '</span>');
+    [['fri', '週五禱告會', '금요기도회'], ['tue', '週二晨禱', '화요 새벽기도'], ['late', '深夜禱告會', '심야 기도회']].forEach(function (x) {
+      if (pr[x[0]] != null) out.push('<span class="bl-n pr">' + bi(x[1], x[2]) + a + ' <b>' + pr[x[0]] + '</b>' + bi('人', '명') + '</span>');
+    });
+    return out.join('');
+  }
+  function head(sub, date) {
+    return '<div class="jb-head"><div class="jb-mast"><img src="assets/img/logo-256.png" alt="" width="44" height="44"><div><b>我們家教會' +
+      '</b><small>' + bi('週報', '주보') + ' · OUR FAMILY CHURCH</small></div></div><div class="jb-date">' + date + '<small>' + sub + '</small></div></div>';
+  }
+  function setHash(h) { try { history.replaceState(null, '', '#' + h); } catch (e) {} }
+  function render() {
+    var it = items[idx], n = items.length;
+    if (it.cover) {
+      var h = D.hl[it.y], av = D.avg[it.y] || {}, c = D.years[it.y].length;
+      paper.innerHTML = head(bi(c + ' 個主日', '주일 ' + c + '회'), it.y) +
+        '<h3 class="jb-h">' + bi(it.y + '年 · 一年的恩典', it.y + '년 · 한 해의 은혜') + '</h3>' +
+        '<div class="jb-nums">' + nums(av, true) + '</div>' +
+        (h ? '<ul class="jb-hl">' + h.zh.map(function (z, i) { return '<li>' + bi(esc(z), esc(h.ko[i] || '')) + '</li>'; }).join('') + '</ul>' : '') +
+        '<p class="jb-tip">' + bi('按 → 或左右滑動，看每個主日的週報', '→ 를 누르거나 옆으로 밀면 주일별 주보를 볼 수 있어요') + '</p>';
+      title.innerHTML = bi(it.y + '年 週報', it.y + '년 주보') + ' <small>(' + (idx + 1) + '/' + n + ')</small>';
+      setHash(it.y);
+    } else {
+      var p = it.d.split('-');
+      paper.innerHTML = head(bi(esc(it.kz), esc(it.kk)), p[0] + '. ' + (+p[1]) + '. ' + (+p[2])) +
+        '<div class="jb-nums">' + nums(it) + '</div>' +
+        '<h3 class="jb-h">' + bi('教會消息', '교회 소식') + '</h3>' +
+        (it.az.length ? '<ol class="jb-ann">' + it.az.map(function (z, i) { return '<li>' + bi(esc(z), esc(it.ak[i] || '')) + '</li>'; }).join('') + '</ol>'
+          : '<p class="jb-none">' + bi('這週沒有留下消息紀錄。', '이 주의 소식은 기록되어 있지 않아요.') + '</p>') +
+        '<div class="jb-foot">' + bi('台中 我們家教會', '타이중 · 我們家教會') + '</div>';
+      title.innerHTML = bi(md(it.d) + ' 週報', md(it.d) + ' 주보') + ' <small>(' + (idx + 1) + '/' + n + ')</small>';
+      setHash(it.d);
+    }
+    $('jb-prev').disabled = idx === 0; $('jb-next').disabled = idx === n - 1;
+    var searching = !!q.value.trim();
+    if (!searching) {
+      Array.prototype.forEach.call(list.children, function (li, i) { li.classList.toggle('on', i === idx); });
+      var on = list.children[idx];
+      if (on && list.clientHeight) { var r1 = list.getBoundingClientRect(), r2 = on.getBoundingClientRect();
+        if (r2.top < r1.top || r2.bottom > r1.bottom) list.scrollTop += r2.top - r1.top - 80; }
+    }
+    pick.selectedIndex = idx;
+    dots.innerHTML = '';
+    var s = Math.max(0, Math.min(n - 5, idx - 2));
+    for (var i = s; i < Math.min(n, s + 5); i++) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = i + 1; if (i === idx) b.className = 'on';
+      b.onclick = (function (k) { return function () { go(k); }; })(i); dots.appendChild(b);
+    }
+    paper.style.fontSize = zoom + '%'; $('jb-zval').textContent = zoom + '%';
+  }
+  function go(k) { idx = Math.max(0, Math.min(items.length - 1, k)); render(); }
+  function label(it) { return it.cover ? bi(it.y + '年 一年總覽', it.y + '년 한 해 요약') : '<b>' + md(it.d) + '</b> ' + bi(esc(it.kz), esc(it.kk)); }
+  function fillList() {
+    list.innerHTML = items.map(function (it, i) { return '<li><button type="button" data-i="' + i + '">' + label(it) + '</button></li>'; }).join('');
+    pick.innerHTML = items.map(function (it, i) {
+      return '<option value="' + i + '">' + esc(it.cover ? it.y + (ko() ? '년 한 해 요약' : '年 一年總覽') : md(it.d) + ' · ' + (ko() ? it.kk : it.kz)) + '</option>'; }).join('');
+  }
+  function setYear(y, k) { ySel.value = y; build(y); fillList(); go(k || 0); }
+  function search() {
+    var t = q.value.trim();
+    if (!t) { fillList(); render(); return; }
+    var tl = t.toLowerCase(), hits = [];
+    years.forEach(function (y) { D.years[y].forEach(function (b) {
+      var all = b.az.concat(b.ak).join(' '), at = all.toLowerCase().indexOf(tl);
+      if (at >= 0 || b.d.indexOf(t) >= 0) hits.push({ y: y, b: b, s: at >= 0 ? all.slice(Math.max(0, at - 14), at + 40) : '' });
+    }); });
+    var re = new RegExp(reEsc(esc(t)), 'ig');
+    list.innerHTML = '<li class="jb-cnt">' + bi(hits.length + ' 筆', hits.length + '건') + '</li>' + hits.slice(0, 200).map(function (h) {
+      var s = esc(h.s).replace(re, function (m) { return '<mark>' + m + '</mark>'; });
+      return '<li><button type="button" data-d="' + h.b.d + '"><b>' + h.y + '. ' + md(h.b.d) + '</b>' + (s ? '<small>…' + s + '…</small>' : '') + '</button></li>'; }).join('');
+  }
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.d) {
+      var y = b.dataset.d.slice(0, 4), k = 0; ySel.value = y; build(y);
+      items.forEach(function (it, i) { if (it.d === b.dataset.d) k = i; });
+      pick.innerHTML = ''; fillPickOnly(); go(k);
+      if (window.innerWidth < 760) paper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    go(+b.dataset.i);
+  });
+  function fillPickOnly() {
+    pick.innerHTML = items.map(function (it, i) {
+      return '<option value="' + i + '">' + esc(it.cover ? it.y + (ko() ? '년 한 해 요약' : '年 一年總覽') : md(it.d) + ' · ' + (ko() ? it.kk : it.kz)) + '</option>'; }).join('');
+  }
+  ySel.innerHTML = years.map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+  ySel.onchange = function () { q.value = ''; setYear(ySel.value); };
+  pick.onchange = function () { go(+pick.value); };
+  q.addEventListener('input', search);
+  $('jb-prev').onclick = function () { go(idx - 1); };
+  $('jb-next').onclick = function () { go(idx + 1); };
+  function z(d) { zoom = Math.max(70, Math.min(200, zoom + d)); try { localStorage.setItem('jb-zoom', zoom); } catch (e) {} render(); }
+  $('jb-zin').onclick = function () { z(10); }; $('jb-zout').onclick = function () { z(-10); };
+  box.addEventListener('keydown', function (e) {
+    if (e.target === q || e.target.tagName === 'SELECT') return;
+    if (e.key === 'ArrowLeft') go(idx - 1); if (e.key === 'ArrowRight') go(idx + 1);
+  });
+  var sx = null, sy = null;
+  paper.addEventListener('touchstart', function (e) { if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } else sx = null; }, { passive: true });
+  paper.addEventListener('touchend', function (e) {
+    if (sx == null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(idx + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+  function langChanged() {
+    q.placeholder = ko() ? '주보 내용 검색' : '搜尋週報內容';
+    if (q.value.trim()) { fillPickOnly(); search(); } else fillList();
+    render();
+  }
+  new MutationObserver(langChanged).observe(root, { attributes: true, attributeFilter: ['data-lang'] });
+  var hsh = decodeURIComponent(location.hash.slice(1)), m = hsh.match(/^(\d{4})(-\d\d-\d\d)?$/), k0 = 1, y0 = years[0];
+  if (m && D.years[m[1]]) { y0 = m[1]; k0 = 0; build(y0); if (m[2]) items.forEach(function (it, i) { if (it.d === hsh) k0 = i; }); }
+  q.placeholder = ko() ? '주보 내용 검색' : '搜尋週報內容';
+  setYear(y0, k0);
 })();

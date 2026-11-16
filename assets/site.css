@@ -614,3 +614,73 @@ footer a { text-decoration:none; } footer a:hover { color:var(--lamp-text); text
 }
 .tile { overflow:visible !important; }
 .tile { justify-content:flex-start !important; }
+
+/* ── 週報 viewer #jb (jubo.jjc.or.kr style) ── */
+.jb { display:grid; grid-template-columns:260px minmax(0,1fr); background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); overflow:hidden; min-height:640px; }
+.jb-side, .jb-main { min-width:0; }
+.jb-side { border-right:1px solid var(--line); padding:16px 14px; display:flex; flex-direction:column; gap:10px; min-height:0; background:var(--paper); }
+.jb-yr select, .jb-pick { width:100%; font:inherit; font-size:17px; font-weight:700; padding:9px 12px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); }
+.jb-search { display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:0 10px; }
+.jb-search svg { width:18px; height:18px; fill:none; stroke:var(--ink-soft); stroke-width:2; flex:none; }
+.jb-search input { flex:1; min-width:0; border:0; background:transparent; font:inherit; font-size:15px; padding:9px 0; color:var(--ink); outline:none; }
+.jb-pick { display:none; }
+.jb-list { list-style:none; margin:0; padding:0; overflow-y:auto; max-height:560px; display:grid; gap:2px; align-content:start; }
+.jb-list button { width:100%; text-align:left; font:inherit; font-size:15px; border:0; background:transparent; color:var(--ink); padding:8px 10px; border-radius:8px; cursor:pointer; display:block; line-height:1.45; }
+.jb-list button b { color:var(--lamp-text); font-variant-numeric:tabular-nums; margin-right:4px; }
+.jb-list button small { display:block; color:var(--ink-soft); font-size:13px; }
+.jb-list button:hover { background:var(--sky-soft); }
+.jb-list li.on button { background:var(--sky); color:#fff; }
+.jb-list li.on button b { color:#fff; }
+.jb-list mark { background:var(--lamp-soft); color:inherit; border-radius:3px; }
+.jb-cnt { font-size:13px; color:var(--ink-soft); padding:2px 10px; }
+.jb-main { display:flex; flex-direction:column; min-width:0; }
+.jb-bar { display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line); }
+.jb-title { flex:1; text-align:center; font-weight:900; font-size:18px; }
+.jb-title small { font-weight:400; color:var(--ink-soft); font-size:14px; }
+.jb-btn { font:inherit; font-size:18px; font-weight:700; min-width:40px; height:40px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); cursor:pointer; }
+.jb-btn:hover:not(:disabled) { background:var(--sky-soft); }
+.jb-btn:disabled { opacity:.35; cursor:default; }
+.jb-zoom { display:flex; align-items:center; gap:4px; }
+.jb-zoom span { min-width:48px; text-align:center; font-size:14px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+.jb-stage { flex:1; background:var(--paper-2); padding:22px; overflow:auto; }
+.jb-paper { background:#fffdf8; color:#1c2233; max-width:760px; margin:0 auto; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,.08), 0 14px 34px rgba(0,0,0,.12); padding:2em 2.2em 1.6em; font-size:100%; line-height:1.75; }
+.jb-head { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; border-bottom:3px double #c9b48f; padding-bottom:.8em; margin-bottom:1em; }
+.jb-mast { display:flex; align-items:center; gap:.6em; }
+.jb-mast img { width:2.6em; height:2.6em; flex:none; }
+.jb-mast b { font-family:var(--serif); font-size:1.6em; font-weight:900; display:block; line-height:1.2; }
+.jb-mast small { color:#6b6f80; font-size:.8em; letter-spacing:.06em; }
+.jb-date { text-align:right; font-family:var(--serif); font-weight:900; font-size:1.5em; line-height:1.25; font-variant-numeric:tabular-nums; }
+.jb-date small { display:block; font-family:var(--sans); font-size:.55em; font-weight:700; color:#9a520f; }
+.jb-paper .jb-nums { display:flex; flex-wrap:wrap; gap:.5em .6em; margin:.2em 0 1.1em; }
+.jb-paper .bl-n { font-size:.85em; }
+.jb-paper .bl-n b { font-size:1.45em; }
+.jb-paper .bl-n.am { background:#f6dcb8; color:#1c2233; } .jb-paper .bl-n.am b { color:#9a520f; }
+.jb-paper .bl-n.pm { background:#dfe3f0; color:#1c2233; } .jb-paper .bl-n.pm b { color:#2b3a67; }
+.jb-paper .bl-n.pr { background:#ece3d3; color:#1c2233; box-shadow:none; } .jb-paper .bl-n.pr b { color:#2b3a67; }
+.jb-h { font-family:var(--serif); font-size:1.15em; font-weight:900; margin:0 0 .5em; padding:.15em .7em; background:#2b3a67; color:#fff; display:inline-block; border-radius:4px; }
+.jb-ann { margin:0; padding-left:1.6em; display:grid; gap:.45em; }
+.jb-ann li { padding-left:.2em; }
+.jb-ann li::marker { color:#9a520f; font-weight:900; }
+.jb-hl { margin:.4em 0 0; padding-left:1.3em; display:grid; gap:.45em; }
+.jb-none, .jb-tip { color:#6b6f80; }
+.jb-tip { margin-top:1.4em; font-size:.9em; text-align:center; }
+.jb-foot { margin-top:1.6em; padding-top:.6em; border-top:1px solid #e3d8c3; text-align:center; font-size:.8em; color:#6b6f80; letter-spacing:.08em; }
+.jb-dots { display:flex; justify-content:center; gap:6px; padding:10px; border-top:1px solid var(--line); }
+.jb-dots button { font:inherit; font-size:14px; min-width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; }
+.jb-dots button.on { background:var(--sky); color:#fff; border-color:var(--sky); font-weight:700; }
+@media (max-width:759px) {
+  .jb { grid-template-columns:1fr; min-height:0; border-radius:14px; }
+  .jb-side { border-right:0; border-bottom:1px solid var(--line); padding:12px; display:grid; grid-template-columns:auto 1fr; gap:8px; }
+  .jb-yr select { width:auto; }
+  .jb-search, .jb-pick { min-width:0; }
+  .jb-btn { min-width:44px; }
+  .jb-pick { display:block; grid-column:1 / -1; }
+  .jb-list { grid-column:1 / -1; max-height:240px; }
+  .jb-list:not(:has(.jb-cnt)) { display:none; }
+  .jb-bar { padding:8px; gap:6px; flex-wrap:wrap; }
+  .jb-title { font-size:16px; order:-1; flex-basis:100%; }
+  .jb-bar #jb-prev { order:0; } .jb-zoom { order:1; margin:0 auto; } .jb-bar #jb-next { order:2; }
+  .jb-stage { padding:10px; }
+  .jb-paper { padding:1.3em 1.1em 1.1em; }
+  .jb-mast b { font-size:1.35em; } .jb-date { font-size:1.25em; }
+}
